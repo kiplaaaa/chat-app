@@ -12,9 +12,9 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
+        tabBarLabelPosition: 'below-icon',
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
-        tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
         tabBarStyle: Platform.select({
           ios: {
