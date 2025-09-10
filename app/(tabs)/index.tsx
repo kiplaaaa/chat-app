@@ -1,13 +1,19 @@
 import React from 'react';
 import { Text, StyleSheet, View } from 'react-native';
-
-
+import { GiftedChat } from 'react-native-gifted-chat';
 
 export default function HomeScreen() {
   return (  
-    <View style={styles.titleContainer}>
-      <Text style={{ fontSize: 24, fontWeight: 'bold' }}>Welcome to the Chat App!</Text>
-    </View>
+    <GiftedChat
+      messages={[]}
+      onSend={messages => console.log(messages)}
+      alwaysShowSend
+      placeholder="Type a message..."
+      user={{
+        _id: 1,
+      }}
+    />
+    
   );
 }
 
