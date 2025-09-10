@@ -1,16 +1,12 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet, View } from 'react-native';
-import { IconSymbol } from '@/components/ui/IconSymbol';
+import React from 'react';
+import { Text, StyleSheet, View } from 'react-native';
+
 
 
 export default function HomeScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>  
-      <View style={styles.titleContainer}>
-        <IconSymbol name='0.circle' size={48} color="#808080" />
-        <IconSymbol name="arrow.right" size={48} color="#808080" />
-        <IconSymbol name="sparkles" size={48} color="#808080" />
-      </View>
+  return (  
+    <View style={styles.titleContainer}>
+      <Text style={{ fontSize: 24, fontWeight: 'bold' }}>Welcome to the Chat App!</Text>
     </View>
   );
 }
