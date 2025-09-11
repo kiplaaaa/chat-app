@@ -78,16 +78,18 @@ export default function HomeScreen() {
   //     />
   //   )
   //  }  
-    <GiftedChat
-      messages={messages}
-      onSend={messages => onSend(messages)}
-      alwaysShowSend
-      renderSend={sendButton}
-      placeholder="Type a message..."
-      user={{
-        _id: 1,
-      }}
-    />    
+    return(
+      <GiftedChat
+        messages={messages}
+        onSend={messages => onSend(messages)}
+        alwaysShowSend
+        renderSend={sendButton}
+        placeholder="Type a message..."
+        user={{
+          _id: 1,
+        }}
+      />    
+    )  
   }
 // const styles = StyleSheet.create({
 //   titleContainer: {
