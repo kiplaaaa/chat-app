@@ -3,47 +3,99 @@ import { GiftedChat, Bubble } from 'react-native-gifted-chat';
 import { Ionicons } from "@expo/vector-icons";
 import { View } from 'react-native';
 
+interface Reply {
+  title: string
+  value: string
+  messageId?: number | string
+}
 
-type Message = {
+interface QuickReplies {
+  type: 'radio' | 'checkbox'
+  values: Reply[]
+  keepIt?: boolean
+}
+
+interface User {
   _id: number;
+  name: string
+}
+export interface Message {
+  _id: string | number;
   text: string;
-  createdAt: Date;
-  user: {
-    _id: number;
-    name: string;
-    avatar: string;
-  };
-};
+  createdAt: Date | number;
+  user: User;
+  image?: string;
+  video?: string;
+  audio?: string;
+  system?: boolean;
+  sent?: boolean;
+  received?: boolean;
+  pending?: boolean;
+  quickReplies?: QuickReplies;
+}
 
 export default function HomeScreen() {
-   const [messages, setMessages] = React.useState<Message[] | []>([]);
+   const [messages, setMessages] = React.useState<Message[]>();
 
     useEffect(() => {
       setMessages([
         {
-          _id: 1,
-          text: 'Hello developer',
-          createdAt: new Date(),
-          user: {
-            _id: 2,
-            name: 'hi',
-            avatar: 'https://placeimg.com/140/140/any',
-          },
+    _id: 1,
+    text: 'This is a quick reply. Do you love Gifted Chat? (radio) KEEP IT',
+    createdAt: new Date(),
+    quickReplies: {
+      type: 'radio', // or 'checkbox',
+      keepIt: true,
+      values: [
+        {
+          title: '😋 Yes',
+          value: 'yes',
         },
         {
-          _id: 1,
-          text: 'Try GiftChat - a chat UI for React Native',
-          createdAt: new Date(),
-          user: {
-            _id: 2,
-            name: 'cool',
-            avatar: 'https://placeimg.com/140/140/any',
-          },
+          title: '📷 Yes, let me show you with a picture!',
+          value: 'yes_picture',
         },
+        {
+          title: '😞 Nope. What?',
+          value: 'no',
+        },
+      ],
+    },
+    user: {
+      _id: 2,
+      name: 'React Native',
+    },
+  },
+  {
+    _id: 2,
+    text: 'This is a quick reply. Do you love Gifted Chat? (checkbox)',
+    createdAt: new Date(),
+    quickReplies: {
+      type: 'checkbox', // or 'radio',
+      values: [
+        {
+          title: 'Yes',
+          value: 'yes',
+        },
+        {
+          title: 'Yes, let me show you with a picture!',
+          value: 'yes_picture',
+        },
+        {
+          title: 'Nope. What?',
+          value: 'no',
+        },
+      ],
+    },
+    user: {
+      _id: 2,
+      name: 'React Native',
+    },
+  }
       ])
     }, [])
 
-   const onSend = useCallback((messages) =>{
+   const onSend = useCallback((messages: Message[]) =>{
     setMessages(previousMessages => GiftedChat.append(previousMessages, messages))
    }, []);
 
@@ -55,35 +107,36 @@ export default function HomeScreen() {
     )
    }
 
-  //  const renderBubble = (props: any) => {
-  //   return (
-  //     <Bubble
-  //       {...props}
-  //       wrapperStyle={{
-  //         right: {
-  //           backgroundColor: '#007aff',
-  //         },
-  //         left: {
-  //           backgroundColor: '#f0f0f0',
-  //         }
-  //       }}
-  //       textStyle={{
-  //         right: {
-  //           color: '#fff',
-  //         },
-  //         left: {
-  //           color: '#000',
-  //         }
-  //       }}
-  //     />
-  //   )
-  //  }  
+   const renderBubble = (props: any) => {
+    return (
+      <Bubble
+        {...props}
+        wrapperStyle={{
+          right: {
+            backgroundColor: '#007aff',
+          },
+          left: {
+            backgroundColor: '#f0f0f0',
+          }
+        }}
+        textStyle={{
+          right: {
+            color: '#fff',
+          },
+          left: {
+            color: '#000',
+          }
+        }}
+      />
+    )
+   }  
     return(
       <GiftedChat
         messages={messages}
         onSend={messages => onSend(messages)}
         alwaysShowSend
         renderSend={sendButton}
+        renderBubble={renderBubble}
         placeholder="Type a message..."
         user={{
           _id: 1,

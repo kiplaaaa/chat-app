@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState} from "react";
-import {View, TouchableOpacity, SafeAreaView, Text, TextInput} from "react-native";
+import { TouchableOpacity, View, Text, TextInput} from "react-native";
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 
@@ -12,7 +12,7 @@ export default function SignUpScreen() {
     }
 
   return (
-    <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 16, backgroundColor: '#f0f0f0' }}>     
+    <View style={{ flex: 1, justifyContent: 'center', padding: 16, backgroundColor: '#f0f0f0' }}>     
         <Text style={{ fontSize: 24, marginBottom: 24 }}>Sign Up</Text>
         <TextInput
           placeholder="Email"
@@ -38,6 +38,6 @@ export default function SignUpScreen() {
         <TouchableOpacity style={{ width: '100%', height: 40, backgroundColor: '#007aff', borderRadius: 8, justifyContent: 'center', alignItems: 'center' }}>
           <Text style={{ color: '#fff', fontSize: 16 }}>Create Account</Text>
         </TouchableOpacity>
-    </SafeAreaView>
+    </View>
     );
 }
