@@ -1,170 +1,89 @@
-import React, { useCallback, useEffect } from 'react';
-import { GiftedChat, Bubble, Send } from 'react-native-gifted-chat';
 import { Ionicons } from "@expo/vector-icons";
-import { View } from 'react-native';
+import React, { useState } from "react";
+import { TouchableOpacity, View, Text, TextInput } from "react-native";
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/components/firebase";
+import { router } from "expo-router";
 
-interface Reply {
-  title: string
-  value: string
-  messageId?: number | string
-}
+export default function SignUpScreen() {
+  const [secureTextEntry, setSecureTextEntry] = useState(true);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-interface QuickReplies {
-  type: 'radio' | 'checkbox'
-  values: Reply[]
-  keepIt?: boolean
-}
-
-interface User {
-  _id: number;
-  name: string
-}
-export interface Message {
-  _id: string | number;
-  text: string;
-  createdAt: Date | number;
-  user: User;
-  image?: string;
-  video?: string;
-  audio?: string;
-  system?: boolean;
-  sent?: boolean;
-  received?: boolean;
-  pending?: boolean;
-  quickReplies?: QuickReplies;
-}
-
-export default function HomeScreen() {
-   const [messages, setMessages] = React.useState<Message[]>([]);
-
-    useEffect(() => {
-      setMessages([
-        {
-          _id: 1,
-          text: 'This is a quick reply. Do you love Gifted Chat? (radio) KEEP IT',
-          createdAt: new Date(),
-          quickReplies: {
-            type: 'radio', // or 'checkbox',
-            keepIt: true,
-            values: [
-              {
-                title: '😋 Yes',
-                value: 'yes',
-              },
-              {
-                title: '📷 Yes, let me show you with a picture!',
-                value: 'yes_picture',
-              },
-              {
-                title: '😞 Nope. What?',
-                value: 'no',
-              },
-            ],
-          },
-          user: {
-            _id: 2,
-            name: 'React Native',
-          },
-        },
-        {
-          _id: 2,
-          text: 'This is a quick reply. Do you love Gifted Chat? (checkbox)',
-          createdAt: new Date(),
-          quickReplies: {
-            type: 'checkbox', // or 'radio',
-            values: [
-              {
-                title: 'Yes',
-                value: 'yes',
-              },
-              {
-                title: 'Yes, let me show you with a picture!',
-                value: 'yes_picture',
-              },
-              {
-                title: 'Nope. What?',
-                value: 'no',
-              },
-            ],
-          },
-          user: {
-            _id: 2,
-            name: 'React Native',
-          },
+  const handleLogIn = async () => {
+    try {
+      if (email !== '' && password !== '') {
+        const user = await signInWithEmailAndPassword(auth, email, password)
+        if (user) {
+          router.replace('/(tabs)/explore')
         }
-      ])
-    }, [])
-
-   const onSend = useCallback((messages: Message[] = []) =>{
-    setMessages(previousMessages => GiftedChat.append(previousMessages, messages))
-   }, []);
-
-   const sendButton = (props: any) => {
-    return (
-      <Send {...props}>
-        <View>
-          <Ionicons name="send" size={24} color="#007aff" style={{ marginBottom: 5, marginRight: 5 }} />
-        </View>
-      </Send>
-    )
-   }
-
-   const renderBubble = (props: any) => {
-    return (
-      <Bubble
-        {...props}
-        wrapperStyle={{
-          right: {
-            backgroundColor: '#007aff',
-          },
-          left: {
-            backgroundColor: '#f0f0f0',
-          }
-        }}
-        textStyle={{
-          right: {
-            color: '#fff',
-          },
-          left: {
-            color: '#000',
-          }
-        }}
-      />
-    )
-   }  
-    return(
-      <GiftedChat
-        messages={messages}
-        onSend={messages => onSend(messages)}
-        alwaysShowSend
-        renderSend={sendButton}
-        renderBubble={renderBubble}
-        placeholder="Type a message..."
-        user={{
-          _id: 1,
-        }}
-        isTyping
-      />    
-    )  
+      }
+      else{
+        console.log('Fill in all fields')
+      }
+    }
+    catch (error) {
+        console.error('error', error)
+    }
   }
-// const styles = StyleSheet.create({
-//   titleContainer: {
-//     flex: 1,
-//     backgroundColor: '#f0f0f0',
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//     gap: 8,
-//   },
-//   stepContainer: {
-//     gap: 8,
-//     marginBottom: 8,
-//   },
-//   reactLogo: {
-//     height: 178,
-//     width: 290,
-//     bottom: 0,
-//     left: 0,
-//     position: 'absolute',
-//   },
-// });
+
+  const handleSignUp = async() => {
+    try{
+      if(email !== '' && password !== '') {
+        const user = await createUserWithEmailAndPassword(auth, email, password)
+        if(user){
+          router.replace('/(tabs)/explore')
+        }
+      }
+      else{
+        console.log('Fil in all fields')
+      }
+    }
+    catch(error){
+      console.error('Error', error)
+    }
+  }
+  const passIsVisible = () => {
+    setSecureTextEntry((prev) => !prev)
+  }
+
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', padding: 16, backgroundColor: '#f0f0f0' }}>
+      <Text style={{ fontSize: 24, marginBottom: 24 }}>Sign Up</Text>
+      <TextInput
+        placeholder="Email"
+        value={email}
+        onChangeText={setEmail}
+        style={{ width: '100%', height: 40, borderColor: '#ccc', borderWidth: 1, borderRadius: 8, paddingHorizontal: 8, marginBottom: 16, backgroundColor: '#fff' }}
+        keyboardType="email-address"
+        autoCapitalize="none"
+        autoCorrect={false}
+      />
+      <View>
+        <TextInput
+          placeholder="Password"
+          value={password}
+          onChangeText={setPassword}
+          style={{ width: '100%', height: 40, borderColor: '#ccc', borderWidth: 1, borderRadius: 8, paddingHorizontal: 8, marginBottom: 16, backgroundColor: '#fff' }}
+          secureTextEntry={secureTextEntry}
+          autoCapitalize="none"
+          autoCorrect={false}
+        />
+
+        <TouchableOpacity onPress={passIsVisible} style={{ position: 'absolute', top: 10, right: 10 }}>
+          {secureTextEntry ? <MaterialCommunityIcons name="eye-off-outline" size={24} color="black" /> : <MaterialCommunityIcons name="eye-check-outline" size={24} color="black" />}
+        </TouchableOpacity>
+      </View>
+
+      <TouchableOpacity onPress={handleSignUp} style={{ width: '100%', height: 40, backgroundColor: '#007aff', borderRadius: 8, justifyContent: 'center', alignItems: 'center' }}>
+        <Text style={{ color: '#fff', fontSize: 16 }}>Create Account</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={handleLogIn} style={{ width: '100%', height: 40, backgroundColor: '#007aff', borderRadius: 8, justifyContent: 'center', alignItems: 'center' }}>
+        <Text style={{ color: '#fff', fontSize: 16 }}>LogIn Account</Text>
+      </TouchableOpacity>
+
+    </View>
+  );
+}
